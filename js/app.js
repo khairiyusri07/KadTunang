@@ -27,10 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const envelope = document.getElementById('envelope');
     const coverEnvelope = document.getElementById('cover_envelope');
     const cardContent = document.getElementById('card-content');
+    const floatingMusicBtn = document.getElementById('floating-music-btn');
 
     seal.addEventListener('click', () => {
-      // 1. Play song
+      // 1. Play song automatically on user click
       startMusic();
+
+      // Show floating music toggle button
+      if (floatingMusicBtn) {
+        floatingMusicBtn.classList.add('visible');
+      }
 
       // 2. Open flap
       coverEnvelope.classList.add('open');
@@ -49,19 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. MUSIC PLAYER (Web Audio API + YouTube IFrame fallback)
+  // 2. MUSIC PLAYER (assets/backgroundSong.mp3)
   function initMusic() {
-    // Build audio synthesizer fallback / romantic ambient wedding chords using Web Audio API
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-    let synthTimer = null;
+    bgAudio = document.getElementById('bg-audio');
+    if (!bgAudio) {
+      bgAudio = new Audio('assets/backgroundSong.mp3');
+      bgAudio.id = 'bg-audio';
+      bgAudio.loop = true;
+      document.body.appendChild(bgAudio);
+    }
+    bgAudio.loop = true;
+    bgAudio.volume = 0.85;
 
+    const musicBtn = document.getElementById('floating-music-btn');
     const musicPlayBtn = document.getElementById('btn-play-music');
     const disc = document.getElementById('music-disc');
     const soundwaves = document.querySelectorAll('.soundwave-bar');
 
     function updatePlayState(playing) {
       isPlaying = playing;
+      if (musicBtn) {
+        if (playing) musicBtn.classList.add('playing');
+        else musicBtn.classList.remove('playing');
+      }
       if (disc) {
         if (playing) disc.classList.add('rotating');
         else disc.classList.remove('rotating');
@@ -72,71 +88,46 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Play wedding acoustic chords with soft synthesizer
-    function playRomanticSynth() {
-      if (!audioCtx) audioCtx = new AudioContext();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-
-      const chords = [
-        [261.63, 329.63, 392.00, 523.25], // C major
-        [220.00, 261.63, 329.63, 440.00], // A minor
-        [174.61, 220.00, 261.63, 349.23], // F major
-        [196.00, 246.94, 293.66, 392.00]  // G major
-      ];
-
-      let chordIdx = 0;
-      function arpeggiate() {
-        if (!isPlaying) return;
-        const currentChord = chords[chordIdx % chords.length];
-        currentChord.forEach((freq, noteIdx) => {
-          setTimeout(() => {
-            if (!isPlaying) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-            gain.gain.setValueAtTime(0, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.9);
-          }, noteIdx * 400);
-        });
-        chordIdx++;
-        synthTimer = setTimeout(arpeggiate, 2000);
-      }
-      arpeggiate();
-    }
-
     window.startMusic = function () {
-      // Don't auto-play if music controls / popup are removed
-      if (!musicPlayBtn && !disc) return;
-      updatePlayState(true);
-      try {
-        playRomanticSynth();
-      } catch (e) {
-        console.log('Audio init on interaction:', e);
+      if (!bgAudio) return;
+      const playPromise = bgAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          updatePlayState(true);
+        }).catch(err => {
+          console.log('Audio playback prevented or error:', err);
+        });
       }
     };
 
     window.toggleMusic = function () {
-      if (isPlaying) {
-        updatePlayState(false);
-        if (synthTimer) clearTimeout(synthTimer);
+      if (!bgAudio) return;
+      if (bgAudio.paused) {
+        bgAudio.play().then(() => {
+          updatePlayState(true);
+        }).catch(err => console.log('Audio resume error:', err));
       } else {
-        updatePlayState(true);
-        playRomanticSynth();
+        bgAudio.pause();
+        updatePlayState(false);
       }
     };
 
-    if (musicPlayBtn) {
-      musicPlayBtn.addEventListener('click', window.toggleMusic);
+    if (musicBtn) {
+      musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.toggleMusic();
+      });
     }
+
+    if (musicPlayBtn) {
+      musicPlayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.toggleMusic();
+      });
+    }
+
+    bgAudio.addEventListener('play', () => updatePlayState(true));
+    bgAudio.addEventListener('pause', () => updatePlayState(false));
   }
 
   // 3. COUNTDOWN TIMER
