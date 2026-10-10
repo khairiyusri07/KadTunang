@@ -347,7 +347,7 @@ body {
 }
 
 .cover-names {
-  font-family: var(--font-nick);
+  font-family: var(--font-script), 'Imperial Script', 'Great Vibes', var(--font-nick), cursive;
   font-size: 54px;
   line-height: 1.15;
   color: var(--color-primary);
@@ -411,6 +411,16 @@ body {
   text-transform: uppercase;
 }
 
+.cover-date-islamic {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
 .cover-venue {
   font-family: var(--font-decorative);
   font-size: 14px;
@@ -455,7 +465,8 @@ body {
   animation: dividerExpand 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
 }
 
-#card-content.revealed .cover-date {
+#card-content.revealed .cover-date,
+#card-content.revealed .cover-date-islamic {
   animation: fadeUpGentle 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
 }
 
@@ -666,12 +677,13 @@ body {
 }
 
 .couple-full-name {
-  font-family: var(--font-serif);
-  font-size: 21px;
+  font-family: var(--font-script), 'Imperial Script', 'Great Vibes', var(--font-nick), cursive;
+  font-size: clamp(55px, 6vw, 40px);
   color: var(--color-primary);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.3px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.25;
+  letter-spacing: 0.5px;
 }
 
 .couple-ampersand {
@@ -792,6 +804,43 @@ body {
   border: 1px solid var(--color-card-border);
   border-radius: 30px;
   background: rgba(255, 255, 255, 0.6);
+}
+
+/* Doa Pertunangan Card */
+.doa-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-card-border);
+  border-radius: 18px;
+  padding: 26px 20px;
+  margin: 24px 0;
+  box-shadow: 0 8px 24px rgba(133, 81, 105, 0.08);
+  text-align: center;
+}
+
+.doa-bismillah {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  font-size: 22px;
+  color: var(--color-primary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.doa-text {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--color-secondary);
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.doa-amin {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  font-size: 20px;
+  color: var(--color-primary);
+  letter-spacing: 0.5px;
 }
 
 /* Venue Card */

@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. SCROLL REVEAL ANIMATIONS FOR ELEGANT TEXT
   function initScrollAnimations() {
     const targets = document.querySelectorAll(
-      '.bismillah-text, .greeting-lead, .couple-box, .hashtag-box, .venue-card, .countdown-container'
+      '.bismillah-text, .greeting-lead, .couple-box, .hashtag-box, .doa-card, .venue-card, .countdown-container'
     );
 
     if (!('IntersectionObserver' in window)) {
