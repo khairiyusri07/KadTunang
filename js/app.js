@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. COUNTDOWN TIMER
   function initCountdown() {
-    // Target date: 1 May 2025 11:00 AM
-    const targetDate = new Date('2026-12-19T11:00:00+08:00').getTime();
+    // Target date: 19 December 2026 3:00 PM
+    const targetDate = new Date('2026-12-19T15:00:00+08:00').getTime();
 
     const daysEl = document.getElementById('count-days');
     const hoursEl = document.getElementById('count-hours');
@@ -361,11 +361,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnGoogle = document.getElementById('btn-add-google-cal');
     const btnIcs = document.getElementById('btn-add-ics-cal');
 
-    const eventTitle = encodeURIComponent("Walimatul Urus Adam & Hawa");
-    const eventDetails = encodeURIComponent("Majlis Perkahwinan Adam & Hawa di Glass House Glenmarie. Selamat Pengantin Baru!");
-    const eventLocation = encodeURIComponent("Glass House Glenmarie, LOT 16859, 3 Stone Park, Jalan Penyair U1/44, Shah Alam");
-    // 20250501T110000 / 20250501T163000 (UTC+8) -> 20250501T030000Z / 20250501T083000Z
-    const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=20250501T030000Z/20250501T083000Z&details=${eventDetails}&location=${eventLocation}`;
+    const eventTitle = encodeURIComponent("Majlis Pertunangan Aisya & Khairi");
+    const eventDetails = encodeURIComponent("Majlis Pertunangan Aisya & Khairi di RS Resort.");
+    const eventLocation = encodeURIComponent("RS Resort");
+    // 2026-12-19 3:00 PM - 6:00 PM (UTC+8) -> 20261219T070000Z / 20261219T100000Z
+    const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=20261219T070000Z/20261219T100000Z&details=${eventDetails}&location=${eventLocation}`;
 
     btnGoogle.href = gCalUrl;
 
@@ -374,14 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const icsData = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
-        "PRODID:-//Jemputan//Walimatul Urus//MY",
+        "PRODID:-//Jemputan//Majlis Pertunangan//MY",
         "CALSCALE:GREGORIAN",
         "BEGIN:VEVENT",
-        "DTSTART:20250501T030000Z",
-        "DTEND:20250501T083000Z",
-        "SUMMARY:Walimatul Urus Adam & Hawa",
-        "DESCRIPTION:Majlis Perkahwinan Adam & Hawa di Glass House Glenmarie",
-        "LOCATION:Glass House Glenmarie, 40150 Shah Alam, Selangor",
+        "DTSTART:20261219T070000Z",
+        "DTEND:20261219T100000Z",
+        "SUMMARY:Majlis Pertunangan Aisya & Khairi",
+        "DESCRIPTION:Majlis Pertunangan Aisya & Khairi di RS Resort",
+        "LOCATION:RS Resort",
         "STATUS:CONFIRMED",
         "END:VEVENT",
         "END:VCALENDAR"
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute("download", "Walimatul_Urus_Adam_Hawa.ics");
+      link.setAttribute("download", "Majlis_Pertunangan_Aisya_Khairi.ics");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
