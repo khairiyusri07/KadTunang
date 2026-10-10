@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMusic();
   initCalendar();
   initParticles();
+  initScrollAnimations();
 
   // 1. OPENING SEQUENCE
   function initOpening() {
@@ -422,6 +423,35 @@ document.addEventListener('DOMContentLoaded', () => {
       p.style.animationDelay = `${Math.random() * 5}s`;
       container.appendChild(p);
     }
+  }
+
+  // 8. SCROLL REVEAL ANIMATIONS FOR ELEGANT TEXT
+  function initScrollAnimations() {
+    const targets = document.querySelectorAll(
+      '.bismillah-text, .greeting-lead, .couple-box, .hashtag-box, .venue-card, .countdown-container'
+    );
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    targets.forEach(el => {
+      el.classList.add('scroll-reveal');
+      observer.observe(el);
+    });
   }
 
   // Toast Helper
