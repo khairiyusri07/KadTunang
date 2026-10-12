@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCalendar();
   initParticles();
   initScrollAnimations();
+  initAutoScroll();
 
   // 1. OPENING SEQUENCE
   function initOpening() {
@@ -51,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         envelopeStage.classList.add('stage-hidden');
         cardContent.classList.add('revealed');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Statik selama 2 saat dahulu, kemudian auto scroll ke bawah perlahan-lahan
+        startAutoScroll(2000);
       }, 1500);
     });
   }
@@ -243,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const popups = document.querySelectorAll('.popup');
 
     window.openPopup = function (popupId) {
+      stopAutoScroll();
       closeAllPopups();
       const target = document.getElementById(popupId);
       if (target) {
@@ -443,6 +448,93 @@ document.addEventListener('DOMContentLoaded', () => {
       el.classList.add('scroll-reveal');
       observer.observe(el);
     });
+  }
+
+  // 9. AUTO SCROLL FUNCTIONALITY
+  let autoScrollActive = false;
+  let autoScrollTimeout = null;
+  let autoScrollAnimId = null;
+
+  function initAutoScroll() {
+    // Interaksi manual untuk menghentikan auto scroll apabila pengguna menyentuh skrin
+    const cancelEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    cancelEvents.forEach(evt => {
+      window.addEventListener(evt, (e) => {
+        // Jangan batalkan jika pengguna klik pada seal pembukaan atau butang muzik
+        if (e.target && (e.target.closest('#seal-anchor') || e.target.closest('#envelope-stage'))) {
+          return;
+        }
+        if (e.target && e.target.closest('#floating-music-btn')) {
+          return;
+        }
+        if (autoScrollActive || autoScrollTimeout) {
+          stopAutoScroll();
+        }
+      }, { passive: true });
+    });
+  }
+
+  function startAutoScroll(delayMs = 2000) {
+    stopAutoScroll();
+
+    // Berhenti / statik selama tempoh delay (2 saat) sebelum mula skrol
+    autoScrollTimeout = setTimeout(() => {
+      autoScrollActive = true;
+      let lastTimestamp = null;
+      let fractionalScrollY = window.scrollY || window.pageYOffset || 0;
+
+      // Kelajuan perlahan & lancar (~40px sesaat)
+      const scrollSpeed = 40;
+
+      function step(timestamp) {
+        if (!autoScrollActive) return;
+
+        if (!lastTimestamp) {
+          lastTimestamp = timestamp;
+          fractionalScrollY = window.scrollY || window.pageYOffset || 0;
+        }
+
+        const delta = Math.min(timestamp - lastTimestamp, 100) / 1000;
+        lastTimestamp = timestamp;
+
+        const currentY = window.scrollY || window.pageYOffset || 0;
+        // Jika pengguna skrol secara manual, hentikan auto scroll
+        if (Math.abs(currentY - fractionalScrollY) > 6) {
+          stopAutoScroll();
+          return;
+        }
+
+        fractionalScrollY += scrollSpeed * delta;
+        window.scrollTo(0, fractionalScrollY);
+
+        const maxScroll = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        ) - window.innerHeight;
+
+        // Berhenti apabila sampai ke penghujung halaman
+        if (currentY >= maxScroll - 2) {
+          stopAutoScroll();
+          return;
+        }
+
+        autoScrollAnimId = requestAnimationFrame(step);
+      }
+
+      autoScrollAnimId = requestAnimationFrame(step);
+    }, delayMs);
+  }
+
+  function stopAutoScroll() {
+    if (autoScrollTimeout) {
+      clearTimeout(autoScrollTimeout);
+      autoScrollTimeout = null;
+    }
+    if (autoScrollAnimId) {
+      cancelAnimationFrame(autoScrollAnimId);
+      autoScrollAnimId = null;
+    }
+    autoScrollActive = false;
   }
 
   // Toast Helper
