@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cardContent.classList.add('revealed');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Statik selama 2 saat dahulu, kemudian auto scroll ke bawah perlahan-lahan
-        startAutoScroll(2000);
+        // Statik selama 4 saat dahulu, kemudian auto scroll ke bawah perlahan-lahan
+        startAutoScroll(4000);
       }, 1500);
     });
   }
@@ -455,65 +455,69 @@ document.addEventListener('DOMContentLoaded', () => {
   let autoScrollTimeout = null;
   let autoScrollAnimId = null;
 
+  function getScrollPos() {
+    return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  }
+
+  function setScrollPos(pos) {
+    window.scrollTo(0, pos);
+    if (document.documentElement) document.documentElement.scrollTop = pos;
+    if (document.body) document.body.scrollTop = pos;
+  }
+
   function initAutoScroll() {
-    // Interaksi manual untuk menghentikan auto scroll apabila pengguna menyentuh skrin
-    const cancelEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
-    cancelEvents.forEach(evt => {
-      window.addEventListener(evt, (e) => {
-        // Jangan batalkan jika pengguna klik pada seal pembukaan atau butang muzik
-        if (e.target && (e.target.closest('#seal-anchor') || e.target.closest('#envelope-stage'))) {
-          return;
-        }
-        if (e.target && e.target.closest('#floating-music-btn')) {
-          return;
-        }
+    // Pengguna skrol secara manual (wheel, drag touch, atau kekunci panah) untuk henti auto scroll
+    const stopEvents = ['wheel', 'touchmove'];
+    stopEvents.forEach(evt => {
+      window.addEventListener(evt, () => {
         if (autoScrollActive || autoScrollTimeout) {
           stopAutoScroll();
         }
       }, { passive: true });
     });
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', 'Home', 'End'].includes(e.code)) {
+        if (autoScrollActive || autoScrollTimeout) {
+          stopAutoScroll();
+        }
+      }
+    }, { passive: true });
   }
 
-  function startAutoScroll(delayMs = 2000) {
+  function startAutoScroll(delayMs = 4000) {
     stopAutoScroll();
 
-    // Berhenti / statik selama tempoh delay (2 saat) sebelum mula skrol
+    // Statik dulu dalam 4 saat sebelum mula skrol
     autoScrollTimeout = setTimeout(() => {
       autoScrollActive = true;
       let lastTimestamp = null;
-      let fractionalScrollY = window.scrollY || window.pageYOffset || 0;
+      let fractionalScrollY = getScrollPos();
 
-      // Kelajuan perlahan & lancar (~40px sesaat)
-      const scrollSpeed = 40;
+      // Kelajuan lancar & perlahan (~42px sesaat)
+      const scrollSpeed = 42;
 
       function step(timestamp) {
         if (!autoScrollActive) return;
 
         if (!lastTimestamp) {
           lastTimestamp = timestamp;
-          fractionalScrollY = window.scrollY || window.pageYOffset || 0;
+          fractionalScrollY = getScrollPos();
         }
 
         const delta = Math.min(timestamp - lastTimestamp, 100) / 1000;
         lastTimestamp = timestamp;
 
-        const currentY = window.scrollY || window.pageYOffset || 0;
-        // Jika pengguna skrol secara manual, hentikan auto scroll
-        if (Math.abs(currentY - fractionalScrollY) > 6) {
-          stopAutoScroll();
-          return;
-        }
-
         fractionalScrollY += scrollSpeed * delta;
-        window.scrollTo(0, fractionalScrollY);
+        setScrollPos(fractionalScrollY);
 
         const maxScroll = Math.max(
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         ) - window.innerHeight;
 
-        // Berhenti apabila sampai ke penghujung halaman
-        if (currentY >= maxScroll - 2) {
+        // Berhenti jika sudah sampai penghujung halaman
+        if (maxScroll > 10 && getScrollPos() >= maxScroll - 5) {
           stopAutoScroll();
           return;
         }
