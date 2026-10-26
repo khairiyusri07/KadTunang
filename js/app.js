@@ -57,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startAutoScroll(4000);
       }, 1500);
     });
+
+    const scrollPrompt = document.getElementById('cover-scroll-prompt');
+    if (scrollPrompt) {
+      scrollPrompt.addEventListener('click', () => {
+        const details = document.getElementById('invite-details');
+        if (details) {
+          details.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
   }
 
   // 2. MUSIC PLAYER (assets/backgroundSong.mp3)
@@ -403,20 +413,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 7. PARTICLES (Floating Rose & Gold Sparkles)
+  // 7. PARTICLES (Floating Rose Petals & Gold Sparkles)
   function initParticles() {
     const container = document.getElementById('particles-container');
     if (!container) return;
 
-    for (let i = 0; i < 22; i++) {
+    for (let i = 0; i < 26; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
-      const size = Math.random() * 6 + 4;
+      const isPetal = i % 2 === 0;
+      const size = isPetal ? (Math.random() * 6 + 6) : (Math.random() * 4 + 3);
       p.style.width = `${size}px`;
       p.style.height = `${size}px`;
       p.style.left = `${Math.random() * 100}%`;
-      p.style.animationDuration = `${Math.random() * 6 + 5}s`;
-      p.style.animationDelay = `${Math.random() * 5}s`;
+      p.style.animationDuration = `${Math.random() * 7 + 6}s`;
+      p.style.animationDelay = `${Math.random() * 6}s`;
+      if (isPetal) {
+        p.style.background = 'radial-gradient(circle, rgba(160, 25, 45, 0.65) 0%, rgba(100, 15, 30, 0.3) 70%, transparent 100%)';
+        p.style.borderRadius = '50% 15% 50% 50%';
+      } else {
+        p.style.background = 'radial-gradient(circle, rgba(240, 205, 145, 0.95) 0%, rgba(195, 155, 95, 0.5) 60%, transparent 100%)';
+      }
       container.appendChild(p);
     }
   }
