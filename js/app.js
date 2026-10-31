@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initMusic() {
     bgAudio = document.getElementById('bg-audio');
     if (!bgAudio) {
-      bgAudio = new Audio('assets/backgroundSong.mp3');
+      bgAudio = new Audio('assets/atasrestu.mp3');
       bgAudio.id = 'bg-audio';
       bgAudio.loop = true;
       document.body.appendChild(bgAudio);
