@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 2. MUSIC PLAYER (assets/backgroundSong.mp3)
+  // 2. MUSIC PLAYER (assets/atasrestu.mp3)
   function initMusic() {
     bgAudio = document.getElementById('bg-audio');
     if (!bgAudio) {
@@ -120,6 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
       bgAudio.id = 'bg-audio';
       bgAudio.loop = true;
       document.body.appendChild(bgAudio);
+    } else {
+      bgAudio.src = 'assets/atasrestu.mp3';
     }
     bgAudio.loop = true;
     bgAudio.volume = 0.85;
