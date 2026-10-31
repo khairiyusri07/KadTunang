@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initAutoScroll();
 
-  // 1. OPENING SEQUENCE
+  // 1. OPENING SEQUENCE WITH SEAL SPARKLE BURST & 3D REVEAL
   function initOpening() {
     const seal = document.getElementById('seal-anchor');
     const envelopeStage = document.getElementById('envelope-stage');
@@ -30,8 +30,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardContent = document.getElementById('card-content');
     const floatingMusicBtn = document.getElementById('floating-music-btn');
 
-    seal.addEventListener('click', () => {
-      // 1. Play song automatically on user click
+    if (!seal) return;
+
+    seal.addEventListener('click', (e) => {
+      // 1. Trigger magical sparkle burst from wax seal
+      const rect = seal.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      createSealSparkleBurst(centerX, centerY);
+
+      // 2. Play romantic background melody
       startMusic();
 
       // Show floating music toggle button
@@ -39,23 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
         floatingMusicBtn.classList.add('visible');
       }
 
-      // 2. Open flap
-      coverEnvelope.classList.add('open');
+      // 3. Smooth opening
+      if (coverEnvelope) {
+        coverEnvelope.classList.add('open');
+      }
 
-      // 3. Slide envelope down
+      // 4. Slide envelope downward
       setTimeout(() => {
         envelope.classList.add('open');
-      }, 900);
+      }, 500);
 
-      // 4. Reveal invitation card
+      // 5. Reveal invitation card with upward rising elevation
       setTimeout(() => {
         envelopeStage.classList.add('stage-hidden');
         cardContent.classList.add('revealed');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Statik selama 4 saat dahulu, kemudian auto scroll ke bawah perlahan-lahan
+        // Pause for 4 seconds on cover, then gently auto-scroll
         startAutoScroll(4000);
-      }, 1500);
+      }, 1300);
     });
 
     const scrollPrompt = document.getElementById('cover-scroll-prompt');
@@ -66,6 +76,39 @@ document.addEventListener('DOMContentLoaded', () => {
           details.scrollIntoView({ behavior: 'smooth' });
         }
       });
+    }
+  }
+
+  // Radial Gold & Rose Petal Sparkle Burst on Wax Seal Tap
+  function createSealSparkleBurst(x, y) {
+    const count = 28;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'seal-burst-particle';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.3 - 0.15);
+      const distance = Math.random() * 95 + 45;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+
+      p.style.setProperty('--dx', `${dx}px`);
+      p.style.setProperty('--dy', `${dy}px`);
+      p.style.left = `${x}px`;
+      p.style.top = `${y}px`;
+
+      const size = Math.random() * 7 + 4;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+
+      if (i % 2 === 0) {
+        p.style.background = 'radial-gradient(circle, #fffdf2 0%, #fae29c 50%, #cba358 100%)';
+        p.style.boxShadow = '0 0 10px #cba358';
+      } else {
+        p.style.background = 'radial-gradient(circle, #ffe7ec 0%, #f7aab8 60%, #e27d92 100%)';
+        p.style.boxShadow = '0 0 8px #f7aab8';
+      }
+
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1250);
     }
   }
 
@@ -413,35 +456,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 7. PARTICLES (Floating Rose Petals & Gold Sparkles)
+  // 7. PARTICLES (3D Falling Rose Petals & Twinkling Gold Sparkles)
   function initParticles() {
     const container = document.getElementById('particles-container');
     if (!container) return;
+    container.innerHTML = '';
 
-    for (let i = 0; i < 26; i++) {
+    const totalCount = 28;
+    for (let i = 0; i < totalCount; i++) {
+      const isPetal = i % 3 !== 0;
       const p = document.createElement('div');
-      p.className = 'particle';
-      const isPetal = i % 2 === 0;
-      const size = isPetal ? (Math.random() * 6 + 6) : (Math.random() * 4 + 3);
+      p.className = isPetal ? 'petal-particle' : 'sparkle-particle';
+
+      const size = isPetal ? (Math.random() * 8 + 10) : (Math.random() * 5 + 3);
       p.style.width = `${size}px`;
-      p.style.height = `${size}px`;
-      p.style.left = `${Math.random() * 100}%`;
-      p.style.animationDuration = `${Math.random() * 7 + 6}s`;
-      p.style.animationDelay = `${Math.random() * 6}s`;
-      if (isPetal) {
-        p.style.background = 'radial-gradient(circle, rgba(160, 25, 45, 0.65) 0%, rgba(100, 15, 30, 0.3) 70%, transparent 100%)';
-        p.style.borderRadius = '50% 15% 50% 50%';
-      } else {
-        p.style.background = 'radial-gradient(circle, rgba(240, 205, 145, 0.95) 0%, rgba(195, 155, 95, 0.5) 60%, transparent 100%)';
-      }
+      p.style.height = isPetal ? `${size * 1.3}px` : `${size}px`;
+      p.style.left = `${Math.random() * 98}%`;
+
+      const duration = isPetal ? (Math.random() * 6 + 7) : (Math.random() * 5 + 5);
+      const delay = Math.random() * 8;
+      const swayDuration = Math.random() * 3 + 2.5;
+
+      p.style.animationDuration = `${duration}s, ${swayDuration}s`;
+      p.style.animationDelay = `${delay}s, ${delay}s`;
+
       container.appendChild(p);
     }
   }
 
-  // 8. SCROLL REVEAL ANIMATIONS FOR ELEGANT TEXT
+  // 8. SCROLL REVEAL ANIMATIONS FOR ELEGANT CARDS & TEXT
   function initScrollAnimations() {
     const targets = document.querySelectorAll(
-      '.bismillah-text, .greeting-lead, .couple-box, .hashtag-box, .doa-card, .venue-card, .countdown-container'
+      '.bismillah-text, .greeting-lead, .couple-box, .hashtag-box, .doa-card, .venue-card, .countdown-container, .cal-date-card, .contact-card'
     );
 
     if (!('IntersectionObserver' in window)) {
@@ -457,12 +503,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -30px 0px'
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
     });
 
-    targets.forEach(el => {
+    targets.forEach((el, idx) => {
       el.classList.add('scroll-reveal');
+      el.style.transitionDelay = `${(idx % 3) * 0.1}s`;
       observer.observe(el);
     });
   }

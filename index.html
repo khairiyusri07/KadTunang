@@ -33,11 +33,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&family=Imperial+Script&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Imperial+Script&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
 </head>
 
 <body>
@@ -52,71 +52,19 @@
       <div id="particles-container"></div>
 
       <!-- =======================================================
-           1. ENVELOPE OPENING STAGE (OPENING 8)
+           1. ENVELOPE OPENING STAGE (ROMANTIC ILLUSTRATED ENVELOPE)
            ======================================================= -->
       <div id="envelope-stage">
-        <div id="envelope">
-
-          <!-- Bottom Pocket of Envelope -->
-          <div id="envelope-pocket">
-            <svg class="envelope-svg" viewBox="0 0 300 600" preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="shadow1" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.45" />
-                </filter>
-                <linearGradient id="pocket-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#5a1221" />
-                  <stop offset="40%" stop-color="#460c18" />
-                  <stop offset="100%" stop-color="#2d060f" />
-                </linearGradient>
-              </defs>
-              <path d="
-                M 0 0
-                L 60 120
-                L 240 120
-                L 300 0
-                L 300 560
-                L 300 600 260 600
-                L 40 600
-                L 0 600 0 560
-                Z
-              " fill="url(#pocket-grad)" filter="url(#shadow1)" />
-            </svg>
-          </div>
-
-          <!-- Top Flap of Envelope -->
-          <div id="cover_envelope">
-            <svg class="envelope-svg" viewBox="0 0 300 300" preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="shadow-flap" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4" />
-                </filter>
-                <linearGradient id="flap-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#691628" />
-                  <stop offset="65%" stop-color="#52101e" />
-                  <stop offset="100%" stop-color="#3b0914" />
-                </linearGradient>
-              </defs>
-              <path d="
-                M -50 0
-                L -50 150
-                L 110 260
-                Q 150 300 190 260
-                L 350 150
-                L 350 0
-                Z
-              " fill="url(#flap-grad)" filter="url(#shadow-flap)" />
-            </svg>
-
-            <!-- Wax Seal & Tap to Open Label -->
-            <div id="seal-anchor" title="Tekan untuk buka jemputan">
-              <img src="assets/Beige Wax Seal Monogram Logo.png" alt="Wax Seal" class="seal-img">
-              <div class="seal-open-label">BUKA</div>
+        <div id="envelope" class="envelope-art-container" title="Tekan untuk buka jemputan">
+          <div class="envelope-card-art-wrap" id="seal-anchor">
+            <div class="envelope-glow-aura"></div>
+            <img src="assets/Beige Wax Seal Monogram Logo.png?v=3.2" alt="Buka Sampul Jemputan Aisya & Khairi" class="envelope-art-img">
+            <div class="envelope-tap-prompt">
+              <span class="tap-heart">❤</span>
+              <span>Tekan Untuk Buka</span>
+              <span class="tap-heart">❤</span>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -125,6 +73,7 @@
 
       <!-- Floating Music Control Button -->
       <button id="floating-music-btn" class="floating-music-btn" title="Pasang / Henti Muzik" aria-label="Kawal Muzik">
+        <div class="music-wave-pulse"></div>
         <div class="music-icon-wrap">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
             <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
@@ -376,7 +325,7 @@
 
   <!-- Application Scripts -->
   <script src="js/data.js"></script>
-  <script src="js/app.js?v=2.0"></script>
+  <script src="js/app.js?v=3.0"></script>
 </body>
 
 </html>
